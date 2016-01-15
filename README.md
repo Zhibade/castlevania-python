@@ -1,4 +1,4 @@
-# Castlevania Gameplay Recration - Python
+# Castlevania Gameplay Recreation - Python
 
 Castlevania Gameplay Recreation using PyGame. Small personal project.
 
