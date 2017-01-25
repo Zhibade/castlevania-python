@@ -1,7 +1,7 @@
 import pygame
 
-from AttackBoxClass import AttackBox
-from PassiveBoxClass import PassiveBox
+from Collision.Attack import AttackBox
+from Collision.Passive import PassiveBox
 
 class Belmont(pygame.sprite.Sprite):
     def __init__(self):
@@ -38,21 +38,21 @@ class Belmont(pygame.sprite.Sprite):
         self.x = 0
         self.y = 0
         self.win = pygame.display.get_surface()
-        
+
         self.floor = self.y
-        
+
         self.collisionArray = []
         self.wallCollision = [False, False]
-        
+
         self.frameArrayWalk = self.loadFrames(3, 'Walk_0')
         self.frameArrayAttack = self.loadFrames(3, 'Attack_0')
         self.frameArrayAttackCrouch = self.loadFrames(3, 'AttackCrouch_0')
-        
+
         self.hitBoxX = 40
         self.hitBoxY = 59
         self.hitBoxOffsetX = [28, 88]
         self.hitBoxOffsetY = [1, 1]
-        
+
         self.attackBox = AttackBox(self.x + 100, self.y + 11, 60, 27)
         self.passiveBox = PassiveBox(self.x + self.hitBoxOffsetX[0], self.y + self.hitBoxOffsetY[0], self.hitBoxX, self.hitBoxY)
 
@@ -62,7 +62,7 @@ class Belmont(pygame.sprite.Sprite):
             numImage = x + 1
             array.append(pygame.image.load(self.imgPath + self.imgName + name + str(numImage) + '.png'))
         return array
-                                       
+
     def move(self, axis):
         if axis == "x":
             self.x += self.moveSpeed
@@ -70,16 +70,16 @@ class Belmont(pygame.sprite.Sprite):
         elif axis == "y":
             self.y += self.moveSpeedY
             self.tempY = self.y
-            
+
     def getHeartCount(self):
         return self.heartCount
-    
+
     def addHeartToCount(self, n):
         self.heartCount += n
-        
+
     def addCollision(self, obj):
         self.collisionArray.append(obj)
-        
+
     def getNumberOfCollisions(self):
         return len(self.collisionArray)
 
@@ -106,30 +106,30 @@ class Belmont(pygame.sprite.Sprite):
 
     def getAttackState(self):
         return self.attacking
-    
+
     def getKeyState(self, key):
         if key == "left":
             return self.keyDown[0]
         elif key == "right":
             return self.keyDown[1]
-        
+
     def getPos(self):
         array = [self.x, self.y]
         return array
-    
+
     def getRect(self):
         array = [self.rect.width, self.rect.height]
         return array
-            
+
     def checkJump(self):
         if self.jumping:
             self.setSpeed(self.jumpForce, "y")
             self.move("y")
             self.jumpForce += self.gravity
-            
+
             if self.jumpAndMove:
                 self.setMove(True)
-            
+
         if self.y > self.floor:
 
             if self.jumpAndMove:
@@ -144,13 +144,13 @@ class Belmont(pygame.sprite.Sprite):
             if self.keyDown[1] and self.attacking == False:
                 self.setMove(True)
                 self.setSpeed(2, "x")
-                
+
             if self.keyDown[0] == False and self.keyDown[1] == False:
                 self.setMove(False)
-                
+
             if self.attacking:
                 self.setMove(False)
-                
+
             self.y = self.floor
             self.jumping = False
             self.jumpForce = self.jumpPush
@@ -160,7 +160,7 @@ class Belmont(pygame.sprite.Sprite):
                 self.playAnim("jump")
         elif self.y < self.floor and self.attacking == False:
             self.playAnim("idle")
-            
+
     def checkWall(self):
         if self.x <= -88 and self.imageDir == False:
             self.wallCollision[0] = True
@@ -168,8 +168,8 @@ class Belmont(pygame.sprite.Sprite):
             self.wallCollision[0] = True
         else:
             self.wallCollision[0] = False
-            
-            
+
+
         if self.y > 244 and self.y <= 340:
             if self.x <= -22 and self.imageDir == False:
                 self.wallCollision[0] = True
@@ -177,28 +177,28 @@ class Belmont(pygame.sprite.Sprite):
                 self.wallCollision[0] = True
             else:
                 self.wallCollision[0] = False
-            
+
         if self.x >= 514 and self.imageDir:
             self.wallCollision[1] = True
         elif self.x >= 514 and self.imageDir == False:
             self.wallCollision[1] = True
         else:
             self.wallCollision[1] = False
-            
+
         if self.wallCollision[0]:
             if self.imageDir == False:
                 self.x = -87
-                self.tempX = self.x 
+                self.tempX = self.x
                 if self.y > 244 and self.y <= 340:
                     self.x = -21
-                    self.tempX = self.x 
+                    self.tempX = self.x
             elif self.imageDir:
                 self.x = -28
-                self.tempX = self.x 
+                self.tempX = self.x
                 if self.y > 244 and self.y <= 340:
                     self.x = 37
                     self.tempX = self.x
-                
+
         if self.wallCollision[1]:
             if self.imageDir == False:
                 self.x = 460
@@ -206,7 +206,7 @@ class Belmont(pygame.sprite.Sprite):
             elif self.imageDir:
                 self.x = 513
                 self.tempX = 513
-            
+
     def fall(self):
         if self.y < self.floor:
             self.setSpeed(self.fallSpeed, "y")
@@ -220,8 +220,8 @@ class Belmont(pygame.sprite.Sprite):
             self.keyDown[0] = state
         elif key == "right":
             self.keyDown[1] = state
-        
-            
+
+
     def setMove(self, state):
         self.moving = state
 
@@ -230,7 +230,7 @@ class Belmont(pygame.sprite.Sprite):
         self.y = y
         self.tempX = x
         self.tempY = y
-        
+
     def setFloor(self, floor):
         self.floor = floor
 
@@ -245,7 +245,7 @@ class Belmont(pygame.sprite.Sprite):
             return self.moveSpeed
         elif axis == "y":
             return self.moveSpeedY
-        
+
     def setOffset(self, x, y, state):
         toggle = state
         if self.offset == False and toggle:
@@ -267,7 +267,7 @@ class Belmont(pygame.sprite.Sprite):
             self.passiveBox.setPos(self.x + self.hitBoxOffsetX[0], self.y + self.hitBoxOffsetY[0])
         else:
             self.imageDir = False
-        
+
         if self.imageDir == False:
             self.setOffset(-50, 0, True)
             self.attackBox.setPos(self.x, self.y + 12)
@@ -282,13 +282,13 @@ class Belmont(pygame.sprite.Sprite):
         if anim == "idle":
             self.image = self.frameArrayWalk[0]
             self.currentFrame = 0
-        
+
         if anim == "walk":
             mod = self.frameModulus%5
 
             if mod == 0:
                 self.currentFrame += 1
-                
+
             if (self.currentFrame > 2):
                 self.currentFrame = 1
 
@@ -307,10 +307,10 @@ class Belmont(pygame.sprite.Sprite):
 
             if mod == 0:
                 self.currentFrame += 1
-                
+
             if self.currentFrame > 1:
                 self.attackBox.toggleActive(True)
-                
+
             if self.currentFrame > 2:
                 self.currentFrame = 2
 
@@ -321,23 +321,23 @@ class Belmont(pygame.sprite.Sprite):
                 elif self.keyDown[1]:
                     self.setMove(True)
                     self.setSpeed(2, "x")
-                    
+
                 self.attacking = False
                 self.attackBox.toggleActive(False)
 
             self.frameModulus += 1
-            
+
             self.image = self.frameArrayAttack[self.currentFrame]
-           
+
         if anim == "attackCrouch":
             mod = self.frameModulus%5
 
             if mod == 0:
                 self.currentFrame += 1
-                
+
             if self.currentFrame > 1:
                 self.attackBox.toggleActive(True)
-                
+
             if self.currentFrame > 2:
                 self.currentFrame = 2
 
@@ -348,18 +348,18 @@ class Belmont(pygame.sprite.Sprite):
                 elif self.keyDown[1]:
                     self.setMove(True)
                     self.setSpeed(2, "x")
-                    
+
                 self.attacking = False
                 self.attackBox.toggleActive(False)
 
             self.frameModulus += 1
-            
-            self.image = self.frameArrayAttackCrouch[self.currentFrame] 
-        
+
+            self.image = self.frameArrayAttackCrouch[self.currentFrame]
+
 
         self.setDirection()
         self.checkWall()
-        
+
     def updateCollision(self):
         if self.imageDir:
             if self.crouching:
@@ -370,9 +370,9 @@ class Belmont(pygame.sprite.Sprite):
                 self.attackBox.setPos(self.x + 100, self.y + 12)
                 self.passiveBox.changeSize(self.hitBoxX, self.hitBoxY)
                 self.hitBoxOffsetY[0] = 1
-                
+
             self.passiveBox.setPos(self.x + self.hitBoxOffsetX[0], self.y + self.hitBoxOffsetY[0])
-        
+
         if self.imageDir == False:
             if self.crouching:
                 self.attackBox.setPos(self.x, self.y + 12)
@@ -382,9 +382,9 @@ class Belmont(pygame.sprite.Sprite):
                 self.attackBox.setPos(self.x, self.y + 27)
                 self.passiveBox.changeSize(self.hitBoxX, self.hitBoxY)
                 self.hitBoxOffsetY[1] = 1
-                
-            self.passiveBox.setPos(self.x + self.hitBoxOffsetX[1], self.y + self.hitBoxOffsetY[1]) 
-        
+
+            self.passiveBox.setPos(self.x + self.hitBoxOffsetX[1], self.y + self.hitBoxOffsetY[1])
+
     def update(self):
         self.tempY = self.y
         if self.moving:
@@ -397,7 +397,7 @@ class Belmont(pygame.sprite.Sprite):
         else:
             if self.jumping == False and self.attacking == False:
                 self.playAnim("idle")
-                
+
             if self.attacking and self.crouching == False:
                 self.playAnim("attack")
 
@@ -405,13 +405,13 @@ class Belmont(pygame.sprite.Sprite):
                 self.playAnim("attackCrouch")
             elif self.crouching and self.attacking == False:
                 self.playAnim("crouch")
-                
+
         if self.jumping == False:
             self.fall()
-            
+
         if self.getNumberOfCollisions() == 0:
             self.setFloor(340)
-                
+
         self.checkJump()
         self.win.blit(self.image, (self.x, self.y))
         self.collisionArray = []

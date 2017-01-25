@@ -1,12 +1,12 @@
 import pygame, sys
 from pygame.locals import *
 
-from BelmontClass import Belmont
-from CandleClass import Candle
-from PlatformBoxClass import PlatformBox
-from StageClass import Stage
-from UIClass import UI_Image
-from UIClass import UI_Text
+from Character.Belmont import Belmont
+from Props.Candle import Candle
+from Collision.Platform import PlatformBox
+from Stage.Stage import Stage
+from UI.UI import UI_Image
+from UI.UI import UI_Text
 
 pygame.init();
 fpsLimit = pygame.time.Clock()
@@ -56,7 +56,7 @@ UI_TextGroup = [UI_Score, UI_Time, UI_HeartCount, UI_LifeCount]
 
 while True:
     win.fill(bg)
-    
+
     currentStage.update()
     runTime = pygame.time.get_ticks()/1000
 
@@ -91,63 +91,63 @@ while True:
                 player.setKeyDown("right", False)
                 if player.getKeyState("left") == False:
                     player.setMove(False)
-                
+
             elif event.key == K_LEFT:
                 player.setKeyDown("left", False)
                 if player.getKeyState("right") == False:
                     player.setMove(False)
-                
+
             if event.key == K_DOWN:
                 player.stopCrouch()
 
     fpsLimit.tick(30)
-    
+
     player.update()
-    
+
     for x in candleGroup:
         pos = x.getPos()
         rect = x.getRect()
         player.attackBox.getHit(pos[0], pos[1], rect[0], rect[1], x)
         x.update()
-        
+
         if x.getState() == False:
             item = x.getSpawnedItem()
             iPos = item.getPos()
             iRect = item.getRect()
             player.passiveBox.getHit(iPos[0], iPos[1], iRect[0], iRect[1], item)
-            
+
             if item.getState() == False and item.getPickedUpState() == False:
                 item.pickUp()
                 player.addHeartToCount(item.getHeartValue())
-                
+
             for y in platformGroup:
                 jPos = y.getPos()
                 jRect = y.getRect()
                 if iPos[0] > jPos[0] and iPos[0] < (jPos[0] + jRect[0]):
                     item.setFloor(jPos[1] + jRect[1] - iRect[1])
-                
+
     for x in platformGroup:
         pos = player.passiveBox.getPos()
         bottom = x.getHit(pos[0], pos[1], 40, 59)
         x.update()
-        
+
         if x.getCollision():
             pPos = player.getPos()
             if pPos[1] <= bottom:
                 player.setFloor(bottom)
                 player.addCollision(x)
-            
-        
-   
+
+
+
     UI_Top.update()
-    
+
     if player.getHeartCount() < 10:
         UI_HeartCount.setText("0" + str(player.getHeartCount()))
     else:
         UI_HeartCount.setText(str(player.getHeartCount()))
-        
+
     UI_Time.setText("0" + str(999 - runTime))
-    
+
     score = player.getHeartCount() * 75
     if score < 10:
         UI_Score.setText("00000" + str(score))
@@ -157,9 +157,8 @@ while True:
         UI_Score.setText("000" + str(score))
     elif score > 1000:
         UI_Score.setText("00" + str(score))
-    
+
     for x in UI_TextGroup:
-        x.update()             
+        x.update()
 
     pygame.display.update()
-    

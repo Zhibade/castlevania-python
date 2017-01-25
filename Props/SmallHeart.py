@@ -1,6 +1,6 @@
 import pygame
 
-from BigHeartClass import BigHeart
+from BigHeart import BigHeart
 
 
 class SmallHeart(BigHeart):
@@ -21,22 +21,22 @@ class SmallHeart(BigHeart):
         self.pickedUp = False
         self.heartValue = 1
         self.floor = 1000
-    
+
     def update(self):
         self.checkCollision()
-        
+
         if self.colliding == False and self.state:
             self.y += 1
-            
+
             if self.moveR == 1:
                 self.x += 1
             else:
                 self.x -= 1
-                
+
             if self.x > self.iX + 10:
                 self.moveR = 0
             elif self.x < self.iX - 10:
                 self.moveR = 1
-            
+
         if self.state:
             self.win.blit(self.image, (self.x, self.y))

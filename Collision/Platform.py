@@ -1,41 +1,46 @@
 import pygame
 
-from AttackBoxClass import AttackBox
+from Passive import PassiveBox
 
-class PassiveBox(AttackBox):
+class PlatformBox(PassiveBox):
 
     def __init__(self, x, y, sizeX, sizeY):
         self.x = x
         self.y = y
         self.sX = sizeX
         self.sY = sizeY
-        self.color = pygame.Color(0,0,255)
+        self.color = pygame.Color(0,255,0)
         self.win = pygame.display.get_surface()
         self.state = True
+        self.playerHit = False
         self.surface = pygame.Surface((self.sX, self.sY))
         self.surface.fill(self.color)
-        
-    def changeSize(self, x, y):
-        self.sX = x
-        self.sY = y
-        self.surface = pygame.Surface((self.sX, self.sY))
-        self.surface.fill(self.color)        
 
-    def getHit(self, tx, ty, sX, sY, obj):
+    def getCollision(self):
+        return self.playerHit
+
+    def getHit(self, tx, ty, sX, sY):
         right = self.x + self.sX
         bottom = self.y + self.sY
-        
+
         tRight = tx + sX
         tBottom = ty + sY
-        
+
         if self.x <= tRight and right >= tx and self.y <= tBottom and bottom >= ty:
             if self.state:
-                obj.setState(False)
-                
+                self.playerHit = True
+                return self.y
+        else:
+            self.playerHit = False
+
     def getPos(self):
         array = [self.x, self.y]
         return array
-            
+
+    def getRect(self):
+        array = [self.sX, self.sY]
+        return array
+
     def update(self):
         pass
         #if self.state:

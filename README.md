@@ -6,6 +6,13 @@ Feel free to use or modify it in any way. If you find anything particularly usef
 
 All art assets were taken from the Castlevania game, property of Konami.
 
+# How to Run
+
+* Install Python 2.7
+* Install PyGame
+* Run Main.py
+
+# Usage
 
 Controls:
 * Move with the arrow keys
